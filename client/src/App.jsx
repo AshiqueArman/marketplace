@@ -10,6 +10,8 @@ import axios from 'axios';
 import {Toaster} from 'react-hot-toast'
 import { UserContextProvider } from '../context/userContext';
 import Dashboard from './pages/Dashboard';
+import Buy from './pages/Buy';
+import ChangePassword from './pages/ChangePassword';
 
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true;
@@ -27,6 +29,8 @@ function App() {
       <Route path='/login' element={<Login />} />
       <Route path='/dashboard' element={<Dashboard />} />
       <Route path='/contact' element={<Contact />} />
+      <Route path='/buy' element={<Buy />} />
+      <Route path='/changePWD' element={<ChangePassword />} />
       
     </Routes> 
     </UserContextProvider>

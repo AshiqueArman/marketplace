@@ -14,24 +14,32 @@ export default function Register() {
 
   const registerUser = async (e) => {
     e.preventDefault();
-    const {name, email, password} = data;
+    const { name, email, password } = data;
 
-    try{
-      const {data} = await axios.post('/register', {
-        name, email, password
-      });
-      
-      if(data.error){
-        toast.error(data.error)
-      }else{
-        setData({});
-        toast.success('Registration Successful!');
-        navigate('/login');
-      }
-    }catch(error){
-      console.log(error);
+    // Password validation
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+    if (!passwordRegex.test(password)) {
+        toast.error('Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one special character (!@#$%^&*)');
+        return;
     }
-  }
+
+    try {
+        const { data } = await axios.post('/register', {
+            name, email, password
+        });
+
+        if (data.error) {
+            toast.error(data.error)
+        } else {
+            setData({});
+            toast.success('Registration Successful!');
+            navigate('/login');
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
   
     return (
     <div>

@@ -1,28 +1,39 @@
 import { useState } from "react";
 import axios from 'axios';
-import {toast} from 'react-hot-toast';
-import {useNavigate} from 'react-router-dom';
+import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
-export default function Contact (){
+export default function Contact() {
     const navigate = useNavigate();
     const [data, setData] = useState({
         name: '',
         email: '',
         message: '',
-    })
+    });
 
-    const contactUser =  async (e) => {
+    const contactUser = async (e) => {
         e.preventDefault();
-        const {name, email, message} = data;
+        const { name, email, message } = data;
 
-        try{
-            const {data} = await axios.post('/contact', {
-                name, email, message
-            });
-        
-            if(data.error){
-                toast.error(data.error);
-            }else{
+        // Basic input validation
+        if (!name.trim() || !email.trim() || !message.trim()) {
+            toast.error('Please fill in all fields.');
+            return;
+        }
+
+        // Preventing XSS by sanitizing inputs
+        const sanitizedData = {
+            name: sanitizeInput(name),
+            email: sanitizeInput(email),
+            message: sanitizeInput(message),
+        };
+
+        try {
+            const response = await axios.post('/contact', sanitizedData);
+
+            if (response.data.error) {
+                toast.error(response.data.error);
+            } else {
                 setData({
                     name: '',
                     email: '',
@@ -30,28 +41,37 @@ export default function Contact (){
                 });
                 toast.success('Message sent successfully!');
             }
-        }catch(error){
-            console.log(error);
+        } catch (error) {
+            console.error('Error:', error);
+            toast.error('An error occurred. Please try again later.');
         }
     }
 
-    return(
+    // Function to sanitize input to prevent XSS
+    const sanitizeInput = (input) => {
+        return input.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    };
+
+    return (
         <div>
             <form onSubmit={contactUser}>
-                <label>Name</label>
-                <input type='text' placeholder='Your Name' value={data.name} onChange={(e) => setData({...data, name: e.target.value})} />
+                <div>
+                    <label>Name</label>
+                    <input type='text' placeholder='Your Name' value={data.name} onChange={(e) => setData({ ...data, name: e.target.value })} />
+                </div>
 
-                <label>Email</label>
-                <input type='email' placeholder='Your Email' value={data.email} onChange={(e) => setData({...data, email: e.target.value})} />
+                <div>
+                    <label>Email</label>
+                    <input type='email' placeholder='Your Email' value={data.email} onChange={(e) => setData({ ...data, email: e.target.value })} />
+                </div>
 
-                <label>Message</label>
-                <input type='text' placeholder='Your Message' value={data.message} onChange={(e) => setData({...data, message: e.target.value})} />
+                <div>
+                    <label>Message</label>
+                    <textarea rows="4" cols="50" placeholder='Your Message' value={data.message} onChange={(e) => setData({ ...data, message: e.target.value })}></textarea>
+                </div>
 
                 <button type='submit'>Submit</button>
-            
             </form>
-
         </div>
     )
-
 }
