@@ -15,7 +15,7 @@ export default function Login() {
     const {email, password} = data;
 
     try {
-      // Sanitize user input
+      // Sanitizing user input
       const sanitizedEmail = sanitizeInput(email);
       const sanitizedPassword = sanitizeInput(password);
 
@@ -34,12 +34,12 @@ export default function Login() {
         navigate('/buy');
       }
     } catch(error) {
-      // Handle error
+      // Handling error
       console.error("Login error:", error);
     }
   }
 
-  // Function to sanitize input to prevent XSS
+  // Sanitizing input to prevent XSS
   const sanitizeInput = (input) => {
     // Replacing "<" with "&lt;" and ">" with "&gt;"
     return input.replace(/</g, '&lt;').replace(/>/g, '&gt;');

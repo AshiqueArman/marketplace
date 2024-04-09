@@ -16,7 +16,7 @@ export default function Register() {
     e.preventDefault();
     const { name, email, password } = data;
 
-    // Password validation
+    // Password validation (password requirements for more robust security)
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
     if (!passwordRegex.test(password)) {
         toast.error('Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one special character (!@#$%^&*)');

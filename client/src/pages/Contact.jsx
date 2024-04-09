@@ -21,7 +21,7 @@ export default function Contact() {
             return;
         }
 
-        // Preventing XSS by sanitizing inputs
+        // Sanitizing inputs to prevent XSS
         const sanitizedData = {
             name: sanitizeInput(name),
             email: sanitizeInput(email),
